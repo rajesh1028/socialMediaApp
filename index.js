@@ -1,41 +1,23 @@
 const express = require("express");
-const { connection } = require("./configs/db");
-const { UserModel } = require("./models/user.model")
-const { userRouter } = require("./routes/user.Route")
-const { noteRouter } = require("./routes/note.route")
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const cors = require("cors");
-require("dotenv").config()
-const { authenticate } = require("./middlewares/authenticate.middleware");
+require("dotenv").config();
+const {connection} = require("../Backend/config/db")
+const {userRoute} = require("./routes/user.route");
+const {postRoute} = require("./routes/post.route")
+const {authenticate} = require("./middleware/authenticate.middleware")
+
 const app = express();
-app.use(cors());
 app.use(express.json());
-
-app.get("/", (req, res) => {
-    res.send("Home Page");
-})
-app.use("/users", userRouter);
-app.use(authenticate)
-app.use("/notes", noteRouter);
+ app.use("/users", userRoute);
+ app.use(authenticate);
+ app.use("/posts", postRoute);
 
 
-app.get("/about", (req, res) => {
-    res.send("About page");
-})
-
-app.get("/contacts", (req, res) => {
-    res.send("Contacts page");
-})
-
-
-
-app.listen(process.env.port, async () => {
+app.listen(process.env.port,async()=>{
     try {
         await connection;
-        console.log("Connected to DB");
+        console.log("Connected to db");
     } catch (error) {
         console.log(error);
     }
-    console.log(`Server is running at ${process.env.port}`);
+    console.log(`server is running at ${process.env.port}`)
 })
